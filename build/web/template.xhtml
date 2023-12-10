@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>
+            <h:outputText value="#{yourBean.selectedLocale eq 'en' ? bundle.Home : bundlefr.Home}" />
+        </title>
+        <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <h:outputScript library="js" name="jsfcrud.js"/>
+        <style>    
+            /* Style pour la région "north" */
+            .header {
+                background-color: #f2f2f2;
+                padding: 10px;
+            }
+
+            /* Style pour le conteneur flex */
+            #northmenuForm > div {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+
+            /* Style pour le choix de langue à gauche */
+            .language-dropdown {
+                margin-right: 10px; /* Marge à droite pour l'espace entre les éléments */
+            }
+
+            /* Style pour le bouton Logout à droite */
+            .logout-menu-item {
+                margin-left: 10px; /* Marge à gauche pour l'espace entre les éléments */
+            }
+        </style> 
+    </h:head>
+
+    <h:body style="height: 90%;">
+        <p:growl id="growl" life="3000" />
+        <p:layout fullPage="true" style="height: 90%;">
+            <!-- North Region -->
+            <p:layoutUnit position="north" size="65" resizable="false" styleClass="header">
+                <h:form id="northmenuForm">
+                    <div>
+                     
+                        <p:selectOneMenu id="languageSelect" value="#{yourBean.selectedLocale}" styleClass="language-dropdown">
+                            <f:selectItem itemValue="en" itemLabel="English" />
+                            <f:selectItem itemValue="fr" itemLabel="French" />
+                            <p:ajax listener="#{yourBean.changeLanguage}" update=":menuForm :MachineListForm :EmployeListForm" />
+                        </p:selectOneMenu>
+
+               
+                        <p:commandLink value="Logout" action="/index" styleClass="logout-menu-item"/>
+                    </div>
+                </h:form>
+            </p:layoutUnit>
+
+
+            <!-- West Region -->
+            <p:layoutUnit position="west" size="150" resizable="true" closable="true" collapsible="true" style="height: 100%;">
+                <div id="container" style="height: 98.5%;">
+                    <div id="sidebar" style="height: 100%;">
+                        <!-- Your existing menu content here -->
+                        <h:form id="menuForm" style="height: 100%;">
+                            <p:menu style="height: 100%;">
+                                <p:menuitem value="#{yourBean.selectedLocale eq 'en' ? bundle.Home : bundlefr.Home}" outcome="/index" icon="ui-icon-home"/>
+                                <p:submenu label="#{yourBean.selectedLocale eq 'en' ? bundle.Maintenance : bundlefr.Maintenance}">
+                                    <p:menuitem value="Employee" outcome="/web/employe/List.xhtml" />
+                                    <p:menuitem value="Machine" outcome="/web/machine/List.xhtml" />
+                                    <p:menuitem value="Machines By Employee" outcome="/web/machineByEmploye/List.xhtml" />
+                                    <p:menuitem value="Graphe" outcome="/graphe.xhtml" />
+                                </p:submenu>
+                            </p:menu>
+                        </h:form>
+                    </div>
+                </div>
+            </p:layoutUnit>
+
+            <!-- Center Region -->
+            <p:layoutUnit position="center">
+                <div id="content">
+                    <ui:insert name="body"/>
+                </div>
+            </p:layoutUnit>
+        </p:layout>
+    </h:body>
+</html>
